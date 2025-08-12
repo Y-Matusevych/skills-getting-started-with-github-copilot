@@ -20,11 +20,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const spotsLeft = details.max_participants - details.participants.length;
 
+        // --- Додаємо секцію учасників ---
+        const participantsSection = details.participants && details.participants.length
+          ? `
+            <div class="activity-card-participants">
+              <div class="activity-card-participants-title">Participants:</div>
+              <ul class="activity-card-participants-list">
+                ${details.participants.map(p => `<li>${p}</li>`).join('')}
+              </ul>
+            </div>
+          `
+          : `
+            <div class="activity-card-participants">
+              <div class="activity-card-participants-title">Participants:</div>
+              <div style="color:#888;font-size:14px;">No participants yet.</div>
+            </div>
+          `;
+
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          ${participantsSection}
         `;
 
         activitiesList.appendChild(activityCard);
@@ -80,6 +98,32 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Error signing up:", error);
     }
   });
+
+  function renderActivityCard(activity) {
+    const participants = activity.participants && activity.participants.length
+      ? `
+        <div class="activity-card-participants">
+          <div class="activity-card-participants-title">Participants:</div>
+          <ul class="activity-card-participants-list">
+            ${activity.participants.map(p => `<li>${p}</li>`).join('')}
+          </ul>
+        </div>
+      `
+      : `
+        <div class="activity-card-participants">
+          <div class="activity-card-participants-title">Participants:</div>
+          <div style="color:#888;font-size:14px;">No participants yet.</div>
+        </div>
+      `;
+
+    return `
+      <div class="activity-card">
+        <h4>${activity.name}</h4>
+        <p>${activity.description}</p>
+        ${participants}
+      </div>
+    `;
+  }
 
   // Initialize app
   fetchActivities();
